@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>Horizon | Cofre local</title>
+    <link rel="stylesheet" href="gate.css" />
+  </head>
+  <body>
+    <main>
+      <section class="intro">
+        <img src="Horizon.png" alt="" /><span>PERSONAL FINANCE</span>
+        <h1>Seu planejamento.<br />Sob sua chave.</h1>
+        <p>Organize entradas, despesas, cartões e metas em um cofre local criptografado.</p>
+        <div class="features">
+          <p>SQLite com criptografia AES-256</p>
+          <p>Sem servidor ou armazenamento no navegador</p>
+          <p>Seus dados permanecem neste computador</p>
+        </div>
+      </section>
+      <section class="panel">
+        <span class="badge">HORIZON CRIPTOGRAFADO</span>
+        <h2 id="title">Abrir cofre</h2>
+        <p id="description">Carregando configuração...</p>
+        <div id="new-options" hidden>
+          <button id="choose" type="button" class="secondary">
+            Importar backup anterior (opcional)
+          </button>
+          <p id="summary" class="summary">Novo por aqui? Deixe em branco para começar do zero.</p>
+        </div>
+        <form id="access">
+          <label for="password">Sua senha</label>
+          <div class="password">
+            <input
+              id="password"
+              type="password"
+              autocomplete="off"
+              maxlength="256"
+              required
+            /><button id="show-password" type="button" aria-label="Mostrar senha">Mostrar</button>
+          </div>
+          <div id="confirm-area" hidden>
+            <label for="confirm">Confirme sua senha</label
+            ><input id="confirm" type="password" autocomplete="off" maxlength="256" /><label
+              class="ack"
+              ><input id="ack" type="checkbox" /> Entendi que sem a senha não será possível
+              recuperar os dados deste cofre.</label
+            >
+          </div>
+          <button id="submit" class="primary">Desbloquear</button>
+        </form>
+        <p id="message" role="status" aria-live="polite"></p>
+        <details>
+          <summary>Restaurar backup criptografado</summary>
+          <p>
+            Use a senha com que o backup foi criado. Um cofre existente será preservado antes da
+            substituição.
+          </p>
+          <label for="backup-password">Senha do backup</label
+          ><input id="backup-password" type="password" autocomplete="off" maxlength="256" /><button
+            id="restore"
+            class="secondary"
+          >
+            Escolher arquivo e restaurar
+          </button>
+        </details>
+        <p class="location" id="location"></p>
+        <p class="fine">
+          Bloqueio após 5 minutos sem interação, ao suspender ou bloquear o Windows. Guarde a senha
+          em um local seguro.
+        </p>
+      </section>
+    </main>
+    <script src="gate.js"></script>
+  </body>
+</html>

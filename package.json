@@ -1,0 +1,27 @@
+{
+  "name": "horizon-personal-finance",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Planejamento financeiro pessoal offline com cofre SQLite criptografado",
+  "author": "João",
+  "license": "MIT",
+  "main": "src/main.cjs",
+  "scripts": {
+    "setup": "node scripts/setup.cjs",
+    "start": "electron .",
+    "test": "electron tests/run.cjs",
+    "test:ui": "node tests/public-ui.cjs",
+    "check:privacy": "node scripts/check-privacy.cjs",
+    "package": "node scripts/package.cjs",
+    "release": "npm run check:privacy && npm test && npm run test:ui && npm run package"
+  },
+  "dependencies": {
+    "better-sqlite3-multiple-ciphers": "13.0.3"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "electron": "45.0.0",
+    "playwright": "1.58.2",
+    "prettier": "3.6.2"
+  }
+}

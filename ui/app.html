@@ -1,0 +1,1135 @@
+<!doctype html>
+<html lang="pt-BR">
+  <meta charset="utf-8" /><meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+  /><meta name="viewport" content="width=device-width,initial-scale=1" /><link
+    rel="icon"
+    href="Horizon.ico"
+  /><title>Horizon - personal finance</title>
+  <style>
+    :root {
+      --nav: #112b40;
+      --green: #087e80;
+      --muted: #73818e;
+      --line: #dfe6ea;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font:
+        14px 'Segoe UI',
+        sans-serif;
+      background: #f4f7f9;
+      color: #183247;
+    }
+    aside {
+      position: fixed;
+      width: 228px;
+      inset: 0 auto 0 0;
+      background: var(--nav);
+      color: white;
+      padding: 32px 18px;
+    }
+    .brand {
+      font-size: 25px;
+      font-weight: 750;
+      padding: 0 14px 35px;
+    }
+    .brand small {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #82c8c8;
+      margin-top: 8px;
+    }
+    nav button {
+      width: 100%;
+      text-align: left;
+      color: #b9cbd6;
+      background: none;
+      margin: 4px 0;
+      padding: 14px;
+      border: 0;
+    }
+    nav button.active {
+      background: #234659;
+      color: white;
+    }
+    aside footer {
+      position: absolute;
+      bottom: 26px;
+      color: #9cb7c6;
+      font-size: 12px;
+      line-height: 1.8;
+      padding: 12px;
+    }
+    main {
+      margin-left: 228px;
+      padding: 36px 42px;
+      max-width: 1700px;
+    }
+    h1 {
+      font-size: 29px;
+      margin: 0 0 9px;
+    }
+    h2 {
+      font-size: 18px;
+    }
+    h3 {
+      font-size: 16px;
+      margin: 0 0 14px;
+    }
+    p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    button,
+    .btn {
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: white;
+      color: #234154;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font: inherit;
+    }
+    button:hover {
+      filter: brightness(0.96);
+    }
+    button.primary {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+    .top,
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .top {
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .spacer {
+      flex: 1;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin: 22px 0;
+    }
+    .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 22px;
+      box-shadow: 0 3px 10px #17344704;
+    }
+    .metric label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .metric strong {
+      display: block;
+      font-size: 25px;
+      margin: 12px 0 7px;
+    }
+    .positive {
+      color: var(--green);
+    }
+    .negative {
+      color: #bb5050;
+    }
+    .muted {
+      color: var(--muted);
+    }
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+    .cycles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 18px;
+    }
+    .item {
+      border-bottom: 1px solid #edf1f3;
+      padding: 13px 0;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .item .name {
+      flex: 1;
+    }
+    .item small {
+      display: block;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .icon {
+      padding: 4px 7px;
+      border: 0;
+      background: transparent;
+    }
+    .check {
+      accent-color: var(--green);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .done {
+      text-decoration: line-through;
+      color: #87959e;
+    }
+    .pill {
+      display: inline-block;
+      background: #e6f3ef;
+      color: #277c6a;
+      border-radius: 20px;
+      padding: 5px 10px;
+      font-size: 11px;
+    }
+    .empty {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .months {
+      display: flex;
+      gap: 12px;
+      overflow: auto;
+      padding-bottom: 8px;
+    }
+    .month {
+      min-width: 210px;
+      text-align: left;
+      padding: 17px;
+    }
+    .month.selected {
+      border: 2px solid var(--green);
+      background: #eff9f8;
+    }
+    .month strong,
+    .month small {
+      display: block;
+      margin: 5px 0;
+    }
+    progress {
+      height: 7px;
+      width: 100%;
+      accent-color: var(--green);
+      border: 0;
+      margin-top: 12px;
+    }
+    dialog {
+      border: 0;
+      border-radius: 16px;
+      width: 510px;
+      max-width: 94vw;
+      padding: 28px;
+      color: #183247;
+      box-shadow: 0 20px 100px #102f4560;
+    }
+    dialog::backdrop {
+      background: #10233388;
+    }
+    form label {
+      display: block;
+      margin: 15px 0 6px;
+      color: #526a79;
+      font-size: 12px;
+    }
+    input,
+    select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #d5dfe5;
+      border-radius: 7px;
+      background: white;
+      color: #183247;
+      font: inherit;
+    }
+    input[type='checkbox'] {
+      width: auto;
+    }
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .bar {
+      background: #e8f2f2;
+      height: 12px;
+      border-radius: 9px;
+      margin: 7px 0 17px;
+      overflow: hidden;
+    }
+    .bar i {
+      display: block;
+      background: var(--green);
+      height: 100%;
+    }
+    .notice {
+      padding: 12px 16px;
+      background: #e8f4f1;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #133b43;
+      color: white;
+      padding: 15px 22px;
+      border-radius: 10px;
+      z-index: 9;
+    }
+    .credit {
+      background: linear-gradient(130deg, #173d54, #087e80);
+      color: white;
+    }
+    .credit p {
+      color: #c6e5e6;
+    }
+    .chart {
+      display: flex;
+      align-items: end;
+      gap: 14px;
+      height: 180px;
+      padding: 18px 0 30px;
+    }
+    .chart > div {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      gap: 4px;
+    }
+    .chart i {
+      width: 22px;
+      background: #078486;
+      border-radius: 4px 4px 0 0;
+    }
+    .chart i.out {
+      background: #b8ced8;
+    }
+    .chart small {
+      position: absolute;
+      bottom: -24px;
+      white-space: nowrap;
+    }
+    .section {
+      margin-top: 24px;
+    }
+    @media (max-width: 1050px) {
+      main {
+        padding: 25px;
+      }
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .columns {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 700px) {
+      aside {
+        position: static;
+        width: auto;
+        padding: 14px;
+      }
+      .brand {
+        padding: 0 10px 12px;
+      }
+      nav {
+        display: flex;
+        overflow: auto;
+      }
+      nav button {
+        width: auto;
+        white-space: nowrap;
+      }
+      aside footer {
+        display: none;
+      }
+      main {
+        margin: 0;
+        padding: 20px;
+      }
+      .top {
+        flex-wrap: wrap;
+      }
+      .grid {
+        gap: 10px;
+      }
+      .metric strong {
+        font-size: 20px;
+      }
+    }
+
+    /* Horizon: consistent controls, financial charts and goal workspaces. */
+    :root {
+      --income: #168052;
+      --expense: #d35757;
+    }
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #54aaa9;
+      outline-offset: 2px;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+    .brand {
+      font-size: 27px;
+    }
+    .brand small {
+      text-transform: lowercase;
+      letter-spacing: 1.6px;
+      font-size: 12px;
+      font-weight: 400;
+    }
+    .positive {
+      color: var(--income);
+    }
+    .negative {
+      color: var(--expense);
+    }
+    aside footer {
+      font-size: 12px;
+      white-space: nowrap;
+      padding: 0 8px;
+    }
+    h2 {
+      margin-top: 0;
+    }
+    .eyebrow {
+      color: #72818c;
+      font-size: 11px;
+      letter-spacing: 0.7px;
+    }
+    .cycle-result {
+      margin-top: 20px;
+      padding-top: 17px;
+      border-top: 1px solid var(--line);
+    }
+    .month {
+      min-width: 215px;
+    }
+    .month-navigation {
+      width: max-content;
+      max-width: 100%;
+    }
+    .month-navigation > .date-control {
+      width: 165px;
+    }
+    .date-control {
+      position: relative;
+      min-width: 145px;
+      flex: 0 1 190px;
+    }
+    .date-control input {
+      padding-right: 43px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.4px;
+    }
+    .calendar-trigger {
+      position: absolute;
+      right: 3px;
+      top: 3px;
+      bottom: 3px;
+      width: 35px;
+      padding: 0;
+      border: 0;
+      color: var(--green);
+      background: #f2f7f8;
+      font-size: 21px;
+      line-height: 1;
+    }
+    .calendar-popover {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 6px);
+      width: 280px;
+      background: white;
+      box-shadow: 0 12px 40px #18324730;
+      border: 1px solid var(--line);
+      padding: 14px;
+      border-radius: 12px;
+      z-index: 50;
+    }
+    .calendar-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .calendar-head button {
+      padding: 3px 10px;
+      font-size: 22px;
+    }
+    .calendar-months {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+      text-align: center;
+    }
+    .calendar-days button {
+      padding: 7px 0;
+      border: 0;
+    }
+    .calendar-days small {
+      padding: 4px;
+      color: var(--muted);
+    }
+    .calendar-months button {
+      padding: 9px;
+      border: 0;
+      background: #f5f8fa;
+    }
+    .calendar-popover button.selected {
+      background: var(--green);
+      color: white;
+    }
+    .calendar-close {
+      margin-top: 12px;
+      width: 100%;
+      padding: 7px;
+      font-size: 12px;
+    }
+    .period-filter {
+      flex-wrap: wrap;
+    }
+    .period-filter .date-control {
+      flex: 1;
+      max-width: 240px;
+    }
+    dialog {
+      max-height: 90vh;
+      overflow: auto;
+    }
+    dialog .date-control {
+      width: 100%;
+    }
+    form .date-control {
+      flex: none;
+    }
+    .calendar-popover button {
+      font-size: 13px;
+    }
+    .tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+    }
+    .tabs button {
+      border: 0;
+      color: var(--muted);
+    }
+    .tabs button.active {
+      background: #e2f1ee;
+      color: var(--green);
+      font-weight: 650;
+    }
+    .goal-switch {
+      display: flex;
+      gap: 10px;
+      overflow: auto;
+    }
+    .goal-switch button {
+      min-width: 160px;
+      text-align: left;
+      padding: 15px 18px;
+    }
+    .goal-switch small {
+      display: block;
+      margin-top: 7px;
+    }
+    .goal-switch .active {
+      border-color: var(--green);
+      background: #eaf5f3;
+    }
+    .salary-total {
+      font-size: 30px;
+      font-weight: 650;
+    }
+    .salary-total small {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      padding-left: 8px;
+    }
+    .salary-part {
+      display: grid;
+      grid-template-columns: 1fr 1fr 28px;
+      gap: 10px;
+      align-items: end;
+    }
+    .salary-part .icon {
+      margin-bottom: 8px;
+    }
+    .table-scroll,
+    .chart-scroll {
+      overflow-x: auto;
+    }
+    .ledger {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 580px;
+    }
+    .ledger th {
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      background: #f6f8fa;
+    }
+    .ledger th,
+    .ledger td {
+      padding: 13px 12px;
+      border-bottom: 1px solid #edf1f3;
+    }
+    .ledger th:nth-child(n + 3),
+    .ledger td:nth-child(n + 3) {
+      text-align: right;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .dashboard-columns {
+      align-items: start;
+    }
+    .chart-card {
+      align-self: start;
+    }
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 18px 0;
+    }
+    .chart-legend span {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .chart-legend i {
+      width: 9px;
+      height: 9px;
+      border-radius: 3px;
+    }
+    .legend-in,
+    .chart-bar.incoming {
+      background: var(--income);
+    }
+    .legend-out,
+    .chart-bar.outgoing {
+      background: var(--expense);
+    }
+    .finance-chart {
+      display: flex;
+      gap: 14px;
+      border-bottom: 1px solid var(--line);
+      height: 235px;
+      padding: 0 10px 8px;
+      margin-bottom: 16px;
+    }
+    .chart-column {
+      flex: 1;
+      min-width: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      align-items: center;
+      gap: 10px;
+    }
+    .bar-pair {
+      height: 195px;
+      width: 100%;
+      display: flex;
+      gap: 5px;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .chart-bar {
+      max-width: 35px;
+      min-width: 12px;
+      flex: 1;
+      border-radius: 5px 5px 0 0;
+    }
+    .chart-column small {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .chart-bar:hover {
+      filter: brightness(0.9);
+    }
+    .goal-switch + .section > .top {
+      margin-bottom: 18px;
+    }
+    .section > .row:has(#goal-asof) {
+      flex-wrap: wrap;
+    }
+    .section > .row:has(#goal-asof) .date-control {
+      flex: none;
+      width: 175px;
+    }
+    .notice {
+      line-height: 1.65;
+    }
+    .card > .section {
+      margin-top: 20px;
+    }
+    @media (max-width: 700px) {
+      .salary-part {
+        gap: 6px;
+      }
+      .period-filter .date-control {
+        max-width: none;
+        flex-basis: calc(100% - 40px);
+      }
+      .calendar-popover {
+        width: 260px;
+      }
+      .ledger {
+        font-size: 12px;
+      }
+      .top .row {
+        flex-wrap: wrap;
+      }
+    }
+
+    .goal-contributions {
+      padding: 10px 18px;
+    }
+    .contribution-table {
+      min-width: 820px;
+    }
+    .contribution-table th:first-child,
+    .contribution-table td:first-child {
+      text-align: center;
+      width: 70px;
+    }
+    .contribution-table th:nth-child(3),
+    .contribution-table td:nth-child(3) {
+      text-align: left;
+    }
+    .contribution-table th:nth-child(2),
+    .contribution-table td:nth-child(2) {
+      white-space: nowrap;
+    }
+    .contribution-table .contribution-month th {
+      text-align: left;
+      background: #eaf2f4;
+      padding: 14px;
+      border-top: 12px solid white;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .contribution-month strong {
+      font-size: 15px;
+      color: #193c4f;
+    }
+    .contribution-month span {
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .contribution-month .row {
+      flex-wrap: wrap;
+      gap: 10px 22px;
+    }
+    .contribution-status {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .contribution-table tbody tr:not(.contribution-month):hover {
+      background: #fafcfd;
+    }
+    .planning-cycles {
+      align-items: start;
+    }
+    .planning-cycles h3 {
+      margin-bottom: 0;
+    }
+    .cycle-balance {
+      background: #f4f7f9;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 14px 0 18px;
+      font-size: 13px;
+    }
+    .cycle-balance > span {
+      font-weight: 600;
+      color: #496477;
+    }
+    .cycle-balance > b {
+      font-size: 18px;
+    }
+    .cycle-section {
+      margin-top: 20px;
+    }
+    .cycle-section h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #23475a;
+    }
+    .cycle-section p {
+      font-size: 12px;
+      margin: 10px 0 0;
+    }
+    .cycle-income {
+      background: #edf5ff;
+      border: 1px solid #dceaf9;
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 0;
+    }
+    .cycle-income h4 {
+      color: #245d93;
+    }
+    .cycle-income .item {
+      border-color: #d8e6f5;
+    }
+    .cycle-income .item:last-child {
+      border-bottom: 0;
+      padding-bottom: 2px;
+    }
+    .cycle-goals {
+      padding: 0 2px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .cycle-goals h4 {
+      color: #087779;
+    }
+    .cycle-goals .item:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+    .cycle-expenses .card-expense-item {
+      background: #f1f6fa;
+      border-radius: 8px;
+      padding: 12px 9px;
+      margin: 7px 0;
+      border: 1px solid #dfe9ef;
+    }
+    .entry-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      line-height: 1.4;
+    }
+    .card-marker {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: #32678b;
+      vertical-align: middle;
+    }
+    .card-expense-item .entry-title {
+      font-weight: 650;
+    }
+    .cycle-actions {
+      flex-wrap: wrap;
+    }
+    .card-toolbar {
+      flex-wrap: wrap;
+    }
+    .themed-credit {
+      min-height: 215px;
+      border: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .themed-credit:after {
+      content: '';
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      border: 1px solid currentColor;
+      border-radius: 100%;
+      right: -80px;
+      bottom: -80px;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+    .themed-credit progress {
+      height: 6px;
+    }
+    .gradient-colors {
+      display: flex;
+      gap: 16px;
+    }
+    .gradient-colors label {
+      flex: 1;
+    }
+    .gradient-colors input {
+      height: 42px;
+      padding: 3px;
+    }
+    .gradient-preview {
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 16px;
+      font-size: 22px;
+      font-weight: 650;
+    }
+    .gradient-preview small {
+      display: block;
+      font-size: 12px;
+      font-weight: 400;
+      margin-top: 12px;
+      opacity: 0.85;
+    }
+    .copy-purchase-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .copy-purchase-row span {
+      flex: 1;
+    }
+    .copy-purchase-row b {
+      font-weight: 600;
+    }
+    .card-gallery {
+      grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+    }
+    .card-gallery .themed-credit {
+      min-height: 245px;
+    }
+    .card-gallery .themed-credit p {
+      font-size: 12px;
+    }
+    .card-gallery .themed-credit small {
+      font-size: 11px;
+    }
+    .card-gallery .card-toolbar button {
+      font-size: 12px;
+    }
+
+    .dashboard-tooltip {
+      position: fixed;
+      z-index: 1000;
+      pointer-events: none;
+      background: #112b40;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 9px;
+      box-shadow: 0 5px 20px #112b4030;
+      white-space: pre-line;
+      font-size: 13px;
+      line-height: 1.55;
+      max-width: 260px;
+    }
+    .dashboard-tooltip-swatch {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      margin-right: 7px;
+      border-radius: 2px;
+      background: var(--income);
+      vertical-align: baseline;
+    }
+    .dashboard-tooltip-swatch.outgoing {
+      background: var(--expense);
+    }
+    .dashboard-tooltip[hidden] {
+      display: none;
+    }
+    .chart-bar:focus-visible {
+      outline: 3px solid #112b40;
+      outline-offset: 3px;
+    }
+    .vault-lock {
+      position: absolute;
+      bottom: 82px;
+      left: 22px;
+      color: #b9e5df;
+      background: #234659;
+      border-color: #3d6470;
+      padding: 10px 18px;
+    }
+    @media (max-width: 700px) {
+      .vault-lock {
+        position: static;
+        margin-top: 8px;
+      }
+    }
+    .calendar-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .calendar-icon {
+      display: block;
+      flex: none;
+      width: 20px;
+      height: 20px;
+    }
+    .card-dates {
+      display: block;
+      margin-top: 10px;
+    }
+    .credit-breakdown {
+      margin-top: 12px;
+      padding: 14px;
+      background: #f3f7fa;
+      border-radius: 9px;
+      color: #183247;
+      font-size: 13px;
+    }
+    .credit-breakdown dl {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 7px 10px;
+      margin: 10px 0 0;
+    }
+    .credit-breakdown dd {
+      margin: 0;
+      text-align: right;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .credit-breakdown details {
+      margin-top: 10px;
+    }
+    .credit-breakdown summary {
+      cursor: pointer;
+      color: #087e80;
+    }
+    .credit-months {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .credit-months button {
+      padding: 5px 8px;
+    } /* BEGIN bank category styles */
+    .cycle-bank-summary {
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line, #dbe4eb);
+      font-size: 12px;
+      color: #75869a;
+    }
+    .cycle-bank-summary h5 {
+      font-size: 12px;
+      margin: 0 0 8px;
+      color: #466178;
+    }
+    .cycle-bank-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 5px 0;
+      flex-wrap: wrap;
+    }
+    .cycle-bank-row small {
+      font-size: 12px;
+    }
+    .bank-help {
+      font-size: 12px;
+    }
+    .entry-bank {
+      display: block;
+      font-size: 12px;
+      color: #71869b;
+    }
+    .category-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #e6edf2;
+      padding: 8px 0;
+    }
+    .category-row .name {
+      flex: 1;
+    }
+    .category-grip {
+      cursor: grab;
+      touch-action: none;
+      border: 0;
+      padding: 8px;
+      background: transparent;
+      color: #8092a4;
+    }
+    .category-grip svg {
+      width: 14px;
+      height: 20px;
+    }
+    .category-row.is-dragging {
+      opacity: 0.45;
+    }
+    .category-row.drop-before {
+      border-top: 3px solid #07858b;
+    }
+    .category-row.drop-after {
+      border-bottom: 3px solid #07858b;
+    }
+    .category-move {
+      padding: 4px 7px;
+    }
+    .preferences-columns {
+      align-items: start;
+    }
+    .category-grip:focus-visible {
+      outline: 2px solid #07858b;
+    }
+    /* END bank category styles */
+    .entry-title {
+      flex-wrap: wrap;
+    }
+    .entry-title .inline-category {
+      display: inline;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--muted);
+      margin: 0 0 0 3px;
+    }
+    .graphite {
+      color: #454b52;
+    }
+  </style>
+  <aside>
+    <div class="brand">◈ Horizon<small>personal finance</small></div>
+    <nav id="nav"></nav>
+    <footer>Cofre local desbloqueado</footer>
+    <button class="vault-lock" onclick="window.horizon.lock()">Bloquear cofre</button>
+  </aside>
+  <main id="app"></main>
+  <dialog id="modal"></dialog>
+  <div id="toast" hidden class="toast"></div>
+  <script src="app.js"></script>
+</html>
