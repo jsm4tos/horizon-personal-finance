@@ -1,0 +1,44 @@
+name: Distribuição Windows
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Conferir versão
+        shell: pwsh
+        run: |
+          $version = node -p "require('./package.json').version"
+          if ($env:GITHUB_REF_NAME -ne "v$version") {
+            throw "A tag deve corresponder à versão do package.json."
+          }
+
+      - run: npm ci
+      - run: npm run setup
+      - run: npm run release
+
+      - name: Compactar e publicar
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $version = node -p "require('./package.json').version"
+          $zip = "Horizon-v$version-windows-x64.zip"
+          Compress-Archive -LiteralPath "release/Horizon-win32-x64" -DestinationPath $zip
+          $hash = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLower()
+          "$hash  $zip" | Set-Content -LiteralPath SHA256SUMS.txt -Encoding ascii
+          gh release create $env:GITHUB_REF_NAME $zip SHA256SUMS.txt --title "Horizon $version — personal finance" --notes-file docs/RELEASE-v1.0.0.md
